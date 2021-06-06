@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'Hello, ' + ${mnp} + '!'" />
+    <p th:text = "${or}"/>
+    <p th:text = "${or}"/>
+
+    <ul th:each="order1 : ${orderss}">
+
+        <li th:text="${order1.}"/>
+        <li th:text="${subject.subjectName}"/>
+        <ul/>
+
+
+</body>
+</html>
