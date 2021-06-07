@@ -1,10 +1,7 @@
-package org.DemoSto.data;
+package org.DemoSto.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -13,6 +10,7 @@ import java.util.Objects;
 @Table(name = "public.order")
 public class Order implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "orderid")
     private Integer orderid;
     @Column(name = "productid")

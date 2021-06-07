@@ -1,24 +1,23 @@
 package org.DemoSto.controller;
 
-import org.DemoSto.dao.RepositorySto;
-import org.DemoSto.data.Order;
 import org.DemoSto.exeption.NotFoundExeption;
 import org.DemoSto.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("order")
 public class MainController {
-    @Autowired
-    private RepositorySto repositorySto;
+
     @Autowired
     private OrderService orderService;
 

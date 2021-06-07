@@ -1,16 +1,15 @@
-package org.DemoSto.data;
+package org.DemoSto.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "public.product")
-public class Product implements Serializable {
+public class Product  {
     @Id
     @Column(name = "productid")
     private String productid;
