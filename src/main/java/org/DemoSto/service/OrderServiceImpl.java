@@ -5,6 +5,7 @@ import org.DemoSto.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,31 +29,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean deleteOrderForAPI(Integer orderId) { //delete without return item
-        Order order = repositoryJra.getOne(orderId);
-        if (order == null) return false;
-        int addMinuteTime = 10;
-        Date nowTime = new Date();
-        final long ONE_MINUTE_IN_MILLIS = 60000;
-        Date orderDate = order.getOrderdate();
-        long curTimeInMs = orderDate.getTime();
-        Date afterAddingMins = new Date(curTimeInMs + (addMinuteTime * ONE_MINUTE_IN_MILLIS));
-        if (afterAddingMins.after(nowTime)) {
-            System.out.println("the Order  cannot be deleted");
-        } else {
-            repositoryJra.delete(order);
-            return true; // all successfully
+        try {
+            Order order = repositoryJra.getOne(orderId);
+            int addMinuteTime = 10;
+            Date nowTime = new Date();
+            final long ONE_MINUTE_IN_MILLIS = 60000;
+            Date orderDate = order.getOrderdate();
+            long curTimeInMs = orderDate.getTime();
+            Date afterAddingMins = new Date(curTimeInMs + (addMinuteTime * ONE_MINUTE_IN_MILLIS));
+            if (afterAddingMins.after(nowTime)) {
+                System.out.println("the Order  cannot be deleted");
+                return false;
+            } else {
+                repositoryJra.delete(order);
+                return true; // all successfully
+            }
+        } catch (javax.persistence.EntityNotFoundException ex) {
+            return false;
         }
-        return false;
     }
 
 
     @Override
     public void createSpezOrderAPI(String productid, Integer quantity) {
-            Order o = new Order();
-            o.setProductid(productid);
-            o.setQuantity(quantity);
-            o.setOrderdate(new Date());
-            repositoryJra.save(o);
+        Order o = new Order();
+        o.setProductid(productid);
+        o.setQuantity(quantity);
+        o.setOrderdate(new Date());
+        repositoryJra.save(o);
 
     }
 
