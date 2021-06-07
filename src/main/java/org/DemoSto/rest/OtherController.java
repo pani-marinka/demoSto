@@ -35,5 +35,6 @@ public class OtherController {
 
 /*
 fetch('/api/spezorder/', { method: 'POST',headers: {'Accept': 'application/json','Content-Type': 'application/json'},body: JSON.stringify({"productname":"pen","quantity":5})}).then(result=>console.log(result))
+fetch('/api/spezorder/', { method: 'POST',headers: {'Accept': 'application/json','Content-Type': 'application/json'},body: JSON.stringify({"productname":"pen","quantity":5})}).then(result=>console.log(result))
  */
 }
