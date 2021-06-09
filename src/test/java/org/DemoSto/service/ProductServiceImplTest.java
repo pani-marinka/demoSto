@@ -1,6 +1,5 @@
 package org.DemoSto.service;
 
-import org.DemoSto.dao.RepositoryJra;
 import org.DemoSto.dao.RepositoryJraForProduct;
 import org.DemoSto.model.Product;
 import org.junit.Assert;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,17 +23,8 @@ class ProductServiceImplTest {
     @Autowired
     public ProductServiceImpl productServiceImpl;
 
-    @MockBean
-    public ProductServiceImpl productServiceImpl1;
-
-    @Autowired
-    private OrderServiceImpl orderServiceImpl;
-
     @Autowired
     private RepositoryJraForProduct repositoryJraForProduct1;
-
-//    @MockBean
-//    private RepositoryJra repositoryJra;
 
     @MockBean
     private RepositoryJraForProduct repositoryJraForProduct;
@@ -50,12 +38,16 @@ class ProductServiceImplTest {
 
     @Test
     void findProductById() {
-        Product product = new Product();
-        Product product1 = new Product("1", "2", 24, 20.0f);
+        Optional<Product> product = java.util.Optional.of(new Product("1","test", 12, 12f));
 
-        Mockito.doReturn(Optional)
-                .when(repositoryJraForProduct1)
-                .findById("1");
+
+                Mockito.doReturn(product)
+                .when(repositoryJraForProduct)
+                .findById(product.get().getProductid());
+
+            Product product1 = productServiceImpl.findProductById("1");
+           Assert.assertArrayEquals(new String[]{product.get().getProductid()}, new String[]{product1.getProductid()});
+
  }
 
     @Test
@@ -68,43 +60,43 @@ class ProductServiceImplTest {
         productList.add(product2);
 
         Mockito.doReturn(productList)
-                .when(repositoryJraForProduct1)
+                .when(repositoryJraForProduct)
                 .findAll();
 
-        Assert.assertEquals("12", productServiceImpl.findProductMinCostByName("pen", 2));
-    }
+        String id = productServiceImpl.findProductMinCostByName("pen", 24);
+        Assert.assertEquals(id,"12");
+         }
 
     @Test
     void haveEnoughProducts() {
 
-        Product product1 = new Product("1", "pen", 24, 20.0f);
+        Optional<Product> product = java.util.Optional.of(new Product("1","test", 12, 12f));
+       Mockito.doReturn(product)
+                .when(repositoryJraForProduct)
+                .findById(product.get().getProductid());
 
-        Mockito.doReturn(product1)
-                .when(productServiceImpl1)
-                .findProductById(product1.getProductid());
+        Product product2 = productServiceImpl.findProductById("1");
+
+      Assert.assertTrue(productServiceImpl.haveEnoughProducts(product2.getProductid(), 2));
+        Assert.assertFalse(productServiceImpl.haveEnoughProducts(product2.getProductid(), 22));
 
 
-        Assert.assertTrue(productServiceImpl.haveEnoughProducts("1", 2));
 
     }
 
     @Test
     void backProduct() {
-        Product product1 = new Product("1", "pen", 24, 20.0f);
-        Mockito.doReturn(product1)
-                .when(productServiceImpl1)
-                .findProductById(product1.getProductid());
-        productServiceImpl.backProduct("1",2);
-        Assert.assertEquals(java.util.Optional.ofNullable(3), java.util.Optional.ofNullable(product1.getQuantity()));
+        Optional<Product> product = java.util.Optional.of(new Product("1","test", 12, 12f));
+        Mockito.doReturn(product)
+                .when(repositoryJraForProduct)
+                .findById(product.get().getProductid());
 
-        /*
+        Product product2 = productServiceImpl.findProductById("1");
 
-        Product p = findProductById(productid);
-        if (p != null) {
-            int y = p.getQuantity() + quantity;
-            p.setQuantity(y);
-            repositoryJraForProduct.save(p);
-        }
-         */
+
+        productServiceImpl.backProduct(product2.getProductid(),2);
+        int i = product2.getQuantity();
+        Assert.assertEquals(14,i);
+
     }
 }

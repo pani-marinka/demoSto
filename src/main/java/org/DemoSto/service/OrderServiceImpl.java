@@ -75,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
    public boolean createOrderAPI(Order order) {
 
           Product product = productService.findProductById(order.getProductid());
+          if (product == null) return false;
           if (productService.haveEnoughProducts(order.getProductid(), order.getQuantity())) {
               if (productService.reservedProduct(order.getProductid(), order.getQuantity())) {
                   try {
@@ -95,12 +96,11 @@ public class OrderServiceImpl implements OrderService {
 
 
      boolean createOrder(Order order, Product product) {
-        Order o = order;
+         Order o = order;
         o.setProduct(product);
         repositoryJra.save(o);
         return true;
-    }
-
+     }
 }
 
 

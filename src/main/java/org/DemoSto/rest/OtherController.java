@@ -35,6 +35,14 @@ public class OtherController {
 }
 
 /*
+POST http://localhost:8080/api/spezorder/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "productname":"pencil",
+  "quantity":2
+  }
 fetch('/api/spezorder/', { method: 'POST',headers: {'Accept': 'application/json','Content-Type': 'application/json'},body: JSON.stringify({"productname":"pen","quantity":5})}).then(result=>console.log(result))
 fetch('/api/spezorder/', { method: 'POST',headers: {'Accept': 'application/json','Content-Type': 'application/json'},body: JSON.stringify({"productname":"pen","quantity":5})}).then(result=>console.log(result))
  */
