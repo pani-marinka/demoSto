@@ -7,14 +7,20 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "public.order")
+@Table(name = "orders")
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "orderid")
     private Integer orderid;
-    @Column(name = "productid")
+
+    @Column(name = "productid",insertable = false, updatable = false)
     private String productid;
+
+    @OneToOne
+    @JoinColumn(name = "productid" )
+    private  Product product;
+
     @Column(name = "quantity")
     private Integer quantity;
     @Column(name = "orderdate")
@@ -23,11 +29,19 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(Integer orderid, String ordername, String productid, Integer quantity, Float price, Date orderdate) {
+    public Order(Integer orderid, String productid, Integer quantity, Date orderdate) {
         this.orderid = orderid;
         this.productid = productid;
         this.quantity = quantity;
         this.orderdate = orderdate;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getOrderid() {

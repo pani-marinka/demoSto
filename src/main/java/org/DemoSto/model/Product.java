@@ -8,7 +8,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "public.product")
+@Table(name = "products")
 public class Product  {
     @Id
     @Column(name = "productid")
@@ -26,6 +26,7 @@ public class Product  {
         this.quantity = quantity;
         this.price = price;
     }
+
 
     public String getProductid() {
         return productid;

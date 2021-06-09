@@ -2,12 +2,11 @@ package org.DemoSto.service;
 
 import org.DemoSto.dao.RepositoryJra;
 import org.DemoSto.model.Order;
+import org.DemoSto.model.Product;
+import org.hibernate.TransientPropertyValueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OrderServiceImpl implements OrderService {
 
 
-    private static final AtomicInteger counter = new AtomicInteger();
-    private List<Order> orderList = new ArrayList<>();
 
     @Autowired
     private RepositoryJra repositoryJra;
@@ -30,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean deleteOrderForAPI(Integer orderId) { //delete without return item
         try {
+
             Order order = repositoryJra.getOne(orderId);
             int addMinuteTime = 10;
             Date nowTime = new Date();
@@ -51,27 +49,56 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void createSpezOrderAPI(String productid, Integer quantity) {
-        Order o = new Order();
-        o.setProductid(productid);
-        o.setQuantity(quantity);
-        o.setOrderdate(new Date());
-        repositoryJra.save(o);
+    public boolean createSpezOrderAPI(Product product) {
+        String productId = productService.findProductMinCostByName(product.getProductname(), product.getQuantity());
+        if (productId == null) {
+            return false;
+        }
+        if (productService.reservedProduct(productId, product.getQuantity())) {
+            Order order = new Order();
+            order.setOrderdate(new Date());
+            order.setQuantity(product.getQuantity());
+            product.setProductid(productId);
+            if (createOrder(order, product)) {
+                return true;
+            } else {
+                productService.backProduct(productId, product.getQuantity());
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+      @Override
+   public boolean createOrderAPI(Order order) {
+
+          Product product = productService.findProductById(order.getProductid());
+          if (productService.haveEnoughProducts(order.getProductid(), order.getQuantity())) {
+              if (productService.reservedProduct(order.getProductid(), order.getQuantity())) {
+                  try {
+                      if (createOrder(order, product)) {
+                          return true;
+                      } else {
+                          throw new Exception("Failed to create Order");
+                      }
+                  } catch (Exception e){
+                      productService.backProduct(order.getProductid(), order.getQuantity());
+                      return false;
+                  }
+              }return false;
+          }
+          return true;
 
     }
 
-    @Override
-    public boolean createOrderAPI(Order order) {
-        boolean productCheckUpd = productService.productForOrder(order.getProductid(), order.getQuantity()); //todo decrise store product
-        if (productCheckUpd) {
-            Order o = new Order();
-            o.setProductid(order.getProductid());
-            o.setQuantity(order.getQuantity());
-            o.setOrderdate(order.getOrderdate());
-            repositoryJra.save(o);
-            return true;
-        }
-        return false;
+
+     boolean createOrder(Order order, Product product) {
+        Order o = order;
+        o.setProduct(product);
+        repositoryJra.save(o);
+        return true;
     }
 
 }

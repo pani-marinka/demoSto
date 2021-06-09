@@ -2,6 +2,7 @@ package org.DemoSto.rest;
 
 import org.DemoSto.model.Order;
 import org.DemoSto.model.Product;
+import org.DemoSto.service.OrderService;
 import org.DemoSto.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,19 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class OtherController {
 
     @Autowired
-    private ProductService productService;
+    private OrderService orderService;
 
 
     @PostMapping
-    public ResponseEntity<Order> createSpezOrderForAPI(@RequestBody Product product) {
+    public ResponseEntity createSpezOrderForAPI(@RequestBody Product product) {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (this.productService.createSpezOrderAPI(product)) {
+        if (this.orderService.createSpezOrderAPI(product)) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("CREATED", HttpStatus.OK);
     }else{
-        return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return  new ResponseEntity<>("NOT CREATED",HttpStatus.BAD_REQUEST);
     }
 
 }
