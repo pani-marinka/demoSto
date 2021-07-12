@@ -64,7 +64,8 @@ class ProductServiceImplTest {
                 .findAll();
 
         String id = productServiceImpl.findProductMinCostByName("pen", 24);
-        Assert.assertEquals(id,"12");
+        //Assert.assertEquals(id,"12");
+        Assert.assertEquals(id,"1");
          }
 
     @Test
